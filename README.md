@@ -1,7 +1,7 @@
-### Veritabanı Yönetim Sistemlerii
-### Dersi Uygulaması
-### Dönem Projesi
-#### Konu : bilet_x veritanı
+#### Veritabanı Yönetim Sistemleri  
+#### Dersi Uygulaması  
+#### Dönem Projesi  
+#### Konu : bilet_x veritanı  
 
 ### Ne
 
