@@ -1,5 +1,5 @@
 -- ------------------------------------
---    BILET-X_v1                          
+--    BILET-X_v2                      
 -- ------------------------------------
 -- © Copyright 2010 designed by gdemir
 -- http://gdemir.me                   
@@ -34,10 +34,10 @@ create table ETKINLIK_TIP (
 )type=MyISAM default charset=utf8;
 
 create table ETKINLIK_YER (
-	etkinlik_id int(11) not null,
+	etkinlik_id int(11) not null auto_increment,
+	etkinlik_kod int(10) not null,
 	ililce_id int(10) not null,
 	kapasite int(10) not null,
-	etkinlik_kod int(10) not null,
 	etkinlik_ad varchar(128) not null,
 	PRIMARY KEY(etkinlik_id)
 )type=MyISAM default charset=utf8;
@@ -83,85 +83,106 @@ create table YONETICI (
 --
 -- tablolara girdi yap
 --
-insert into ETKINLIK_TIP (etkinlik_tur)
+insert into ETKINLIK_TIP (etkinlik_kod, etkinlik_tur)
 values
-	('sinema'),
-	('tiyatro'),
-	('bale');
+	(1, 'sinema'),
+	(2, 'tiyatro'),
+	(3, 'bale');
 
-insert into ILILCE 
+insert into ILILCE (ililce_id, il, ilce) 
 VALUES
 	(11, 'adana', 'merkez'),
 	(12, 'adana', 'kozan'),
 	(21, 'adıyaman', 'merkez');
 
-insert into ETKINLIK_YER (etkinlik_id, ililce_id, kapasite, etkinlik_kod, etkinlik_ad)
+insert into ETKINLIK_YER (etkinlik_id, etkinlik_kod, ililce_id, kapasite, etkinlik_ad)
 values
-	(111, 11, 40, 1, "incredible hulk"),
-	(112, 12, 40, 1, "her şey vatan için");
+	(1, 1, 11, 40, 'incredible hulk'),
+	(2, 1, 11, 50, 'ironman 2'),
+	(3, 1, 12, 60, 'her şey vatan için'),
+	(4, 1, 21, 70, '7 kocalı hürmüz');
 
 insert into MUSTERI (user_id, ililce_id, ad, soyad, ceptel, email)
 values
-	(8060331, 11, "gökhan", "demir", "535xxxxxxx", "gdemir@bil.omu.edu.tr"),
-	(8060333, 12, "sefa", "yıldız", "541xxxxxx", "sayz@bil.omu.edu.tr"),
-	(8060327, 21, "yunus", "ates", "542xxxxxx", "yunus.ates@bil.omu.edu.tr");
+	(8060331, 11, 'gökhan', 'demir', '535xxxxxxx', 'gdemir@bil.omu.edu.tr'),
+	(8060333, 12, 'sefa', 'yıldız', '541xxxxxx', 'sayz@bil.omu.edu.tr'),
+	(8060327, 21, 'yunus', 'ateş', '542xxxxxx', 'yunus.ates@bil.omu.edu.tr'),
+	(8060320, 21, 'hasan', 'ayvaz', '542xxxxxx', 'hasayvaz@bil.omu.edu.tr'),
+	(8060321, 21, 'erol', 'uslu', '541xxxxxx', 'erol.uslu@bil.omu.edu.tr');
 
 insert into YONETICI (ad, soyad, sifre)
 values
-	("kill", "bill", "secret1"),
-	("kul", "bul", "secret2");
+	('kill', 'bill', 'secret1'),
+	('kul', 'bul', 'secret2');
 
-insert into KOLTUK (etkinlik_id, koltuk_kod)
+insert into KOLTUK (koltuk_id, etkinlik_id, koltuk_kod)
 values
-	(111, "a1"),
-	(111, "a2"),
-	(111, "b1"),
-	(111, "b2"),
-	(111, "c1"),
-	(111, "c2"),
-	(112, "AA1"),
-	(112, "AA2"),
-	(112, "AB1"),
-	(112, "AB2"),
-	(112, "AC1"),
-	(112, "AC2");
+	(1,  1, 'a1'),
+	(2,  1, 'a2'),
+	(3,  1, 'b1'),
+	(4,  1, 'b2'),
+	(5,  1, 'c1'),
+	(6,  2, 'c2'),
+	(7,  2, 'AA1'),
+	(8,  2, 'AA2'),
+	(9,  2, 'AB1'),
+	(10, 2, 'AB2'),
+	(11, 3, 'A'),
+	(12, 3, 'B'),
+	(13, 3, 'C'),
+	(14, 3, 'D'),
+	(15, 3, 'E'),
+	(16, 4, 'a-a1'),
+	(17, 4, 'a-b1'),
+	(18, 4, 'a-c1'),
+	(19, 4, 'a-d1'),
+	(20, 4, 'a-e1');
+
 insert into REZERVE (koltuk_id, user_id)
 values
-	(1, 8060331),
-	(7, 8060333);
+	(1, 8060331), /* 1 => 1/a1  */
+	(2, 8060331), /* 1 => 1/a2  */
+	(3, 8060327), /* 2 => 1/b1  */
+	(7, 8060333), /* 7 => 2/AA1 */
+	(19, 8060320), /* 7 => 4/a-d1 */
+	(20, 8060321); /* 7 => 4/a-e1 */
 
 --
 -- sorgu
 --
-/* il="adana" ve ilce="merkez" olan müşterilerin tüm bilgileri */
+-- il="adana" ve ilce="kozan" olan müşterilerin tüm bilgileri 
 select * from MUSTERI
 where ililce_id=(
 	select ililce_id from ILILCE
-	where il="adana" and ilce="merkez"
+	where il='adana' and ilce='kozan'
 );
 
-/* il="adana" olan müşterilerin bütün bilgileri */
+-- il="adana" olan müşterilerin bütün bilgileri 
 select * from MUSTERI
 where ililce_id in (
 	select ililce_id from ILILCE
-	where il="adana"
+	where il='adana'
 );
 
-/* il="adana" ve ilce="merkez" olan etkinlik_yerinin ad'ı kapasite'si*/
+-- il="adana" ve ilce="merkez" de etkinlik tip olarak
+-- sinema olan etkinliklerin adı ve kapsitesini göster 
 select etkinlik_ad, kapasite from ETKINLIK_YER
 where ililce_id=(
 	select ililce_id from ILILCE
-	where il="adana" and ilce="kozan"
+	where il='adana' and ilce='merkez'
+) and etkinlik_kod=(
+	select etkinlik_kod from ETKINLIK_TIP
+	where etkinlik_tur='sinema'
 );
 
-/* il="adana" olan etkinlik_yerinin ad'ı kapasite'si*/
+-- il="adana" olan etkinlik_yer'lerinin ad'ı kapasite'sini göster
 select etkinlik_ad, kapasite from ETKINLIK_YER
 where ililce_id in (
 	select ililce_id from ILILCE
-	where il="adana"
+	where il='adana'
 );
 
-/* user_id=08060331 olan kişinin rezerve ettiği etkinliğin adı'nı gösterir */
+-- user_id=08060331 olan kişinin rezerve ettiği etkinliğin adı'nı göster 
 select etkinlik_ad from ETKINLIK_YER
 where etkinlik_id in (
 	select etkinlik_id from KOLTUK
@@ -170,23 +191,41 @@ where etkinlik_id in (
 		where user_id=8060331
 	)
 );
-/* il="adana" olan etkinlik yerlerini seçen kişilerin tüm bilgilerini göster*/
+
+-- il="adana" olarak sinema'daki etkinlik adı="incredible hulk"
+-- olan etkinliği rezerve edenlerin sayısını göster
+select count(*) from REZERVE
+where koltuk_id in (
+	select koltuk_id from KOLTUK
+	where etkinlik_id in (
+		select etkinlik_id from ETKINLIK_YER
+		where ililce_id in(
+			select ililce_id from ILILCE
+			where il='adana'
+		) and etkinlik_kod=(
+			select etkinlik_kod from ETKINLIK_TIP
+			where etkinlik_tur='sinema'
+		) and etkinlik_ad='incredible hulk'
+	) 
+);
+
+-- il="adana" olarak etkinlik yer'lerini rezerve eden kişilerin tüm bilgilerini göster 
 select * from MUSTERI
 where user_id in (
-	select user_id from REZERVE
+	select distinct user_id from REZERVE
 	where koltuk_id in (
 		select koltuk_id from KOLTUK
 		where etkinlik_id in (
 			select etkinlik_id from ETKINLIK_YER
 			where ililce_id in (
 				select ililce_id from ILILCE
-				 where il="adana"
+				 where il='adana'
 			)
 		)
 	)
 );
 
-/* ilce="kozan" olan etkinlik yerlerini seçen kişilerin tüm bilgilerini göster*/
+-- il="adana" ve ilce="kozan" olan etkinlik yer'lerini seçen kişilerin tüm bilgilerini göster 
 select * from MUSTERI
 where user_id in (
 	select user_id from REZERVE
@@ -196,9 +235,8 @@ where user_id in (
 			select etkinlik_id from ETKINLIK_YER
 			where ililce_id in (
 				select ililce_id from ILILCE
-				where ilce="merkez"
+				where il='adana' and ilce='merkez'
 			)
 		)
 	)
 );
-/* 
