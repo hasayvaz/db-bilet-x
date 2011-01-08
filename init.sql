@@ -23,7 +23,7 @@ drop table if exists REZERVE;
 drop table if exists KOLTUK;
 drop table if exists MEMBER;
 drop table if exists SALON;
-drop table if exists YONETICI;
+drop table if exists ADMIN;
 
 --
 -- tabloları tanımları
@@ -32,6 +32,16 @@ create table KATEGORI (
 	kategori_id int(10) not null auto_increment,
 	kategori_ad varchar(50) not null,
 	PRIMARY KEY(kategori_id)
+)type=MyISAM default charset=utf8;
+
+create table ETKINLIK (
+	etkinlik_id int(10) not null,
+	etkinlik_ad varchar(128) not null,
+	etkinlik_ilk varchar(50) not null,
+	etkinlik_son varchar(50) not null,
+	etkinlik_durum int(1) not null,
+	kategori_id int(10) not null,
+	PRIMARY_KEY(etkinlik_id)
 )type=MyISAM default charset=utf8;
 
 create table ETKINLIK_YER (
@@ -73,20 +83,20 @@ create table KOLTUK (
 create table MEMBER (
 	member_id int(10) not null auto_increment,
 	ililce_id varchar(60) not null,
-	ad varchar(60) not null,
-	soyad varchar(60) not null,
-	ceptel varchar(60) not null,
-	email varchar(60) not null,
+	member_name varchar(60) not null,
+	member_surname varchar(60) not null,
+	member_telephone varchar(60) not null,
+	member_email varchar(60) not null,
 	member_username varchar(60) not null,
 	member_password varchar(60) not null,
 	PRIMARY KEY(member_id)
 )type=MyISAM default charset=utf8;
 
-create table YONETICI (
+create table ADMIN (
 	admin_id int(10) not null auto_increment,
-	ad varchar(60) not null,
-	soyad varchar(60) not null,
-	sifre varchar(60) not null,
+	admin_name varchar(60) not null,
+	admin_surname varchar(60) not null,
+	admin_password varchar(60) not null,
 	PRIMARY KEY(admin_id)
 )type=MyISAM default charset=utf8;
 
@@ -120,7 +130,7 @@ values
 	(3, 1, 12, 3, 60, 'her şey vatan için'),
 	(4, 1, 21, 4, 70, '7 kocalı hürmüz');
 
-insert into MEMBER (member_id, ililce_id, ad, soyad, ceptel, email, member_username, member_password)
+insert into MEMBER (member_id, ililce_id, member_name, member_surname, member_telephone, member_email, member_username, member_password)
 values
 	(8060331, 11, 'gökhan', 'demir', '535xxxxxxx', 'gdemir@bil.omu.edu.tr', 'gdemir', '******'),
 	(8060333, 12, 'sefa', 'yıldız', '541xxxxxx', 'sayz@bil.omu.edu.tr', 'sayz', '******'),
@@ -128,7 +138,7 @@ values
 	(8060320, 21, 'hasan', 'ayvaz', '542xxxxxx', 'hasayvaz@bil.omu.edu.tr','hasayvaz', '******'),
 	(8060321, 21, 'erol', 'uslu', '541xxxxxx', 'erol.uslu@bil.omu.edu.tr', 'euslu', '******');
 
-insert into YONETICI (ad, soyad, sifre)
+insert into ADMIN (admin_id, admin_name, admin_surname, admin_password)
 values
 	('kill', 'bill', 'secret1'),
 	('kul', 'bul', 'secret2');
