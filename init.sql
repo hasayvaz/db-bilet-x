@@ -1,7 +1,7 @@
 -- ------------------------------------
 --    BILET-X_v2                      
 -- ------------------------------------
--- © Copyright 2010 designed by gdemir
+-- ©  Copyright 2010 designed by gdemir
 -- http://gdemir.me                   
 -- Tüm hakkları mahfuzdur
 -- ------------------------------------
@@ -17,13 +17,15 @@ use bilet_x;
 -- tablo var ise, sil
 --
 drop table if exists KATEGORI;
-drop table if exists ETKINLIK_YER;
-drop table if exists ILILCE;
-drop table if exists REZERVE;
-drop table if exists KOLTUK;
-drop table if exists MEMBER;
+drop table if exists ETKINLIK;
+drop table if exists YER;
 drop table if exists SALON;
+drop table if exists KOLTUK;
+drop table if exists REZERVE;
+drop table if exists ILILCE;
+drop table if exists MEMBER;
 drop table if exists ADMIN;
+drop table if exists UCRET;
 
 --
 -- tabloları tanımları
@@ -35,23 +37,43 @@ create table KATEGORI (
 )type=MyISAM default charset=utf8;
 
 create table ETKINLIK (
-	etkinlik_id int(10) not null,
+	etkinlik_id int(10) not null auto_increment,
 	etkinlik_ad varchar(128) not null,
 	etkinlik_ilk varchar(50) not null,
 	etkinlik_son varchar(50) not null,
 	etkinlik_durum int(1) not null,
 	kategori_id int(10) not null,
-	PRIMARY_KEY(etkinlik_id)
+	PRIMARY KEY(etkinlik_id)
 )type=MyISAM default charset=utf8;
 
-create table ETKINLIK_YER (
-	etkinlik_id int(11) not null auto_increment,
-	kategori_id int(10) not null,
+create table YER (
+	yer_id int(11) not null,
+	etkinlik_id int(10) not null,
 	ililce_id int(10) not null,
 	salon_id int(10) not null,
-	kapasite int(10) not null,
-	etkinlik_ad varchar(128) not null,
-	PRIMARY KEY(etkinlik_id)
+	PRIMARY KEY(yer_id)
+)type=MyISAM default charset=utf8;
+
+create table SALON (
+	salon_id int(10) not null auto_increment,
+	salon_ad varchar(60) not null,
+	salon_kapasite int(10) not null,
+	PRIMARY KEY(salon_id)
+)type=MyISAM default charset=utf8;
+
+create table KOLTUK (
+	koltuk_id int(10) not null auto_increment,
+	koltuk_ad varchar(60) not null,
+	salon_id int(10) not null,
+	PRIMARY KEY(koltuk_id)
+)type=MyISAM default charset=utf8;
+
+create table REZERVE (
+	rezerve_id int(10) not null auto_increment,
+	ucret_id int(10) not null,
+	koltuk_id int(10) not null,
+	member_id int(10) not null,
+	PRIMARY KEY(rezerve_id)
 )type=MyISAM default charset=utf8;
 
 create table ILILCE (
@@ -59,25 +81,6 @@ create table ILILCE (
 	il varchar(50) not null,
 	ilce varchar(50) not null,
 	PRIMARY KEY(ililce_id)
-)type=MyISAM default charset=utf8;
-
-create table REZERVE (
-	koltuk_id int(10) not null,
-	member_id int(10) not null,
-	PRIMARY KEY(koltuk_id)
-)type=MyISAM default charset=utf8;
-
-create table SALON (
-	salon_id int(10) not null auto_increment,
-	salon_ad varchar(60) not null,
-	PRIMARY KEY(salon_id)
-)type=MyISAM default charset=utf8;
-
-create table KOLTUK (
-	koltuk_id int(10) not null auto_increment,
-	etkinlik_id int(10) not null,
-	koltuk_kod varchar(60) not null,
-	PRIMARY KEY(koltuk_id)
 )type=MyISAM default charset=utf8;
 
 create table MEMBER (
@@ -100,6 +103,13 @@ create table ADMIN (
 	PRIMARY KEY(admin_id)
 )type=MyISAM default charset=utf8;
 
+create table UCRET (
+	ucret_id int(10) not null auto_increment,
+	ucret_ad varchar(60) not null,
+	ucret_fiyat varchar(60) not null,
+	PRIMARY KEY(ucret_id)
+)type=MyISAM default charset=utf8;
+
 --
 -- tablolara girdi yap
 --
@@ -107,28 +117,83 @@ insert into KATEGORI (kategori_id, kategori_ad)
 values
 	(1, 'sinema'),
 	(2, 'tiyatro'),
-	(3, 'bale');
+	(3, 'opera'),
+	(4, 'bale');
+
+insert into ETKINLIK (etkinlik_id, etkinlik_ad, etkinlik_ilk, etkinlik_son, etkinlik_durum, kategori_id)
+values
+	(1, 'incredible hulk', '12.10.2010', '24.10.2010', 1, 1),
+	(2, 'ironman 2', '13.10.2010', '25.10.2010', 1, 1),
+	(3, '7 kocalı hürmüz', '15.10.2010', '27.10.2010', 1, 2),
+	(4, 'hacıvat ve karagöz', '16.10.2010', '28.10.2010', 1, 2);
+
+insert into YER (yer_id, etkinlik_id, ililce_id, salon_id)
+values
+	(1, 1, 11, 1),	
+	(2, 1, 11, 2),	
+	(3, 1, 12, 1),	
+	(4, 1, 12, 2),
+	(5, 1, 21, 3),
+	(6, 1, 21, 4),
+	(7, 2, 11, 1),
+	(8, 2, 11, 2),
+	(9, 3, 12, 5),
+	(10, 3, 12, 6),
+	(11, 4, 21, 5),
+	(12, 4, 21, 6),
+	(13, 4, 22, 5),
+	(14, 4, 22, 6);
+
+insert into SALON (salon_id, salon_ad, salon_kapasite)
+values
+	(1, 'A001', 4),
+	(2, 'B001', 4),
+	(3, 'A', 6),
+	(4, 'B', 6),
+	(5, 'T-A', 4),
+	(6, 'T-B', 4);
+
+insert into KOLTUK (koltuk_id, salon_id, koltuk_ad)
+values  -- A001 salonu koltukları
+	(1,  1, 'a1'),
+	(2,  1, 'a2'),
+	(3,  1, 'a3'),
+	(4,  1, 'a4'),
+	-- B001 salonu koltukları
+	(7,  2, 'b1'),
+	(8,  2, 'b2'),
+	(9,  2, 'b3'),
+	(10, 2, 'b4'),
+	-- A salonu koltukları
+	(11, 3, 'a-1'),
+	(12, 3, 'a-2'),
+	(13, 3, 'a-3'),
+	(14, 3, 'a-4'),
+	(15, 3, 'a-5'),
+	(16, 3, 'a-6'),
+	-- B salonu koltukları
+	(17, 4, 'b-1'),
+	(18, 4, 'b-2'),
+	(19, 4, 'b-3'),
+	(20, 4, 'b-4'),
+	(21, 4, 'b-5'),
+	(22, 4, 'b-6');
+
+insert into REZERVE (rezerve_id, ucret_id, koltuk_id, member_id)
+values
+	(1, 1, 1, 8060331),   
+	(2, 1, 2, 8060331),   
+	(3, 2, 3, 8060327),   
+	(4, 1, 4, 8060333),  
+	(5, 1, 5, 8060320), 
+	(6, 1, 6, 8060321);
 
 insert into ILILCE (ililce_id, il, ilce) 
 values
 	(11, 'adana', 'merkez'),
 	(12, 'adana', 'kozan'),
-	(21, 'adıyaman', 'merkez');
-
-insert into SALON (salon_id, salon_ad)
-values
-	(1, 'a001'),
-	(2, 'a002'),
-	(3, 'a003'),
-	(4, 'a004'),
-	(5, 'a005');
-
-insert into ETKINLIK_YER (etkinlik_id, kategori_id, ililce_id, salon_id, kapasite, etkinlik_ad)
-values
-	(1, 1, 11, 1, 40, 'incredible hulk'),
-	(2, 1, 11, 2, 50, 'ironman 2'),
-	(3, 1, 12, 3, 60, 'her şey vatan için'),
-	(4, 1, 21, 4, 70, '7 kocalı hürmüz');
+	(21, 'adıyaman', 'merkez'),
+	(22, 'adıyaman', 'falanfilan');
 
 insert into MEMBER (member_id, ililce_id, member_name, member_surname, member_telephone, member_email, member_username, member_password)
 values
@@ -140,41 +205,20 @@ values
 
 insert into ADMIN (admin_id, admin_name, admin_surname, admin_password)
 values
-	('kill', 'bill', 'secret1'),
-	('kul', 'bul', 'secret2');
+	(1, 'kill', 'bill', 'secret1'),
+	(2, 'kul', 'bul', 'secret2');
 
-insert into KOLTUK (koltuk_id, etkinlik_id, koltuk_kod)
+insert into UCRET (ucret_id, ucret_ad, ucret_fiyat)
 values
-	(1,  1, 'a1'),
-	(2,  1, 'a2'),
-	(3,  1, 'b1'),
-	(4,  1, 'b2'),
-	(5,  1, 'c1'),
-	(6,  1, 'c2'),
-	(7,  2, 'AA1'),
-	(8,  2, 'AA2'),
-	(9,  2, 'AB1'),
-	(10, 2, 'AB2'),
-	(11, 3, 'A'),
-	(12, 3, 'B'),
-	(13, 3, 'C'),
-	(14, 3, 'D'),
-	(15, 3, 'E'),
-	(16, 4, 'a-a1'),
-	(17, 4, 'a-b1'),
-	(18, 4, 'a-c1'),
-	(19, 4, 'a-d1'),
-	(20, 4, 'a-e1');
+	(1, 'İndirimli-gün ücreti', 6),
+	(2, 'Öğrenci ücreti', 8),
+	(3, 'Tam ücreti', 10);
 
-insert into REZERVE (koltuk_id, member_id)
-values
-	(1, 8060331), /* 1 => 1/a1  */
-	(2, 8060331), /* 1 => 1/a2  */
-	(3, 8060327), /* 2 => 1/b1  */
-	(7, 8060333), /* 7 => 2/AA1 */
-	(19, 8060320), /* 7 => 4/a-d1 */
-	(20, 8060321); /* 7 => 4/a-e1 */
 
+--
+-- FIXME  explain : coming soon..
+--
+/*
 --
 -- sorgu
 --
@@ -273,3 +317,4 @@ select * from SALON
 where salon_id in (
 	select salon_id from ETKINLIK_YER
 );
+*/
