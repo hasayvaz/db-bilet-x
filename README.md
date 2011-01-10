@@ -49,6 +49,8 @@ Açıklamalar
   isimleriyle birlikte e-posta ile gönderecektir. (onur.baran@bil.omu.edu.tr)  
 - Ödev teslim tarihi Son Final Sınavı Tarihi (**Her geciken gün için 5 puan kırılacaktır.**)  
 
+### uygulmayı denemek için
 
-
-
+	$ cd ~/
+	$ git clone git@github.com:gdemir/db-bilet-x.git
+	$ mysql root -u -p < ~/db-bilet-x/init.sql
