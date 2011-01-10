@@ -249,18 +249,11 @@ values
 
 
 --
--- FIXME  explain : coming soon..
---
-
---
 -- sorgu
 --
-
 -- user_id=8060331 olan kişinin rezerve sayısı 
 select count(*) from REZERVE
 where member_id = 8060331;
-
-
 
 -- il='adana' olan üyelerin bütün bilgileri 
 select * from MEMBER
@@ -427,7 +420,6 @@ where r.ucret_id = u.ucret_id and r.yer_id in (
 		where il = 'adana'
 	)
 );
-
 
 -- il='adana' ilce='merkez'de kategori='sinema' etkinlik_adı='incredible hulk' olan filmin 
 -- salon='A001' de tarih=13.10.2010' da rezerve edilen koltukları göster
