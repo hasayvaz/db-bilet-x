@@ -481,3 +481,20 @@ where k.salon_id = s.salon_id and s.salon_id in (
 		where il = 'adana' and ilce = 'merkez'
 	)
 );
+
+/*
+-- il='adana' ilce='merkez' kategori='sinema' etkinlik_ad='incredible hulk' 
+-- olan etkinliklerin gerçekleşeceği salon_ad, salon_kapasiteleri ve koltuk adları
+-- select s.salon_kapasite, s.salon_ad, k.koltuk_ad from KOLTUK k, SALON s
+-- where k.salon_id = s.salon_id and s.salon_id in (
+select * from ETKINLIK
+where etkinlik_id in (
+	select etkinlik_id from YER
+	where salon_id in (
+		select salon_id from SALON
+		where salon_ad = 'A001'
+	) and ililce_id in (
+		select ililce_id from ILILCE
+		where il = 'adana' and ilce = 'merkez'
+	)
+);
