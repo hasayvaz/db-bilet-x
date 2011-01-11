@@ -48,7 +48,7 @@ where etkinlik_id in (
 
 -- il='adana' kategori='sinema' olan etkinliklerin
 -- adları, filmin giriş/bitiş tarihleri
-select etkinlik_ad, etkinlik_ilk, etkinlik_son, etkinlik_saat from ETKINLIK
+select etkinlik_ad, etkinlik_ilk_gun, etkinlik_ilk_ay, etkinlik_ilk_yil, etkinlik_son_gun, etkinlik_son_ay, etkinlik_son_yil, etkinlik_saat from ETKINLIK
 where etkinlik_id in (
 	select etkinlik_id from YER
 	where ililce_id in (
@@ -62,7 +62,7 @@ where etkinlik_id in (
 
 -- il='adiyaman' ilce='merkez' kategori='tiyatro' olan etkinliklerin
 -- adları, filmin giriş/bitiş tarihleri
-select etkinlik_ad, etkinlik_ilk, etkinlik_son, etkinlik_saat from ETKINLIK
+select etkinlik_ad, etkinlik_ilk_gun, etkinlik_ilk_ay, etkinlik_ilk_yil, etkinlik_son_gun, etkinlik_son_ay, etkinlik_son_yil, etkinlik_saat from ETKINLIK
 where etkinlik_id in (
 	select etkinlik_id from YER
 	where ililce_id in (
@@ -83,7 +83,7 @@ where koltuk_id in (
 
 -- member_id=8060331 olan kişinin rezerve ettiği etkinliklerin
 -- adları, filmin giriş/bitiş tarihleri
-select etkinlik_ad, etkinlik_ilk, etkinlik_son, etkinlik_saat from ETKINLIK
+select etkinlik_ad,  etkinlik_ilk_gun, etkinlik_ilk_ay, etkinlik_ilk_yil, etkinlik_son_gun, etkinlik_son_ay, etkinlik_son_yil, etkinlik_saat from ETKINLIK
 where etkinlik_id in (
 	select etkinlik_id from REZERVE
 	where member_id = 8060331

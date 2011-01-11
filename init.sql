@@ -5,7 +5,7 @@
 -- http://gdemir.me                   
 -- Tüm hakkları mahfuzdur
 -- |DİKKAT!| bu sql düzenlenecek ya da
---  silinecek el ile yazılmıştır.
+-- silinecektir.(el ile yazılmıştır.)
 -- ------------------------------------
 
 --
@@ -28,7 +28,6 @@ drop table if exists ILILCE;
 drop table if exists MEMBER;
 drop table if exists ADMIN;
 drop table if exists UCRET;
-drop table if exists TARIH;
 
 --
 -- tabloları tanımları
@@ -42,8 +41,12 @@ create table KATEGORI (
 create table ETKINLIK (
 	etkinlik_id int(10) not null auto_increment,
 	etkinlik_ad varchar(128) not null,
-	etkinlik_ilk varchar(50) not null,
-	etkinlik_son varchar(50) not null,
+	etkinlik_ilk_gun int(10) not null,
+	etkinlik_ilk_ay int(10) not null,
+	etkinlik_ilk_yil int(10) not null,
+	etkinlik_son_gun int(10) not null,
+	etkinlik_son_ay int(10) not null,
+	etkinlik_son_yil int(10) not null,
 	etkinlik_saat varchar(50) not null,
 	etkinlik_durum int(1) not null,
 	kategori_id int(10) not null,
@@ -74,7 +77,9 @@ create table KOLTUK (
 
 create table REZERVE (
 	rezerve_id int(10) not null auto_increment,
-	tarih_id int(50) not null,
+	rezerve_gun int(10) not null,
+	rezerve_ay int(10) not null,
+	rezerve_yil int(10) not null,
 	yer_id int(10) not null,
 	koltuk_id int(10) not null,
 	ucret_id int(10) not null,
@@ -116,14 +121,6 @@ create table UCRET (
 	PRIMARY KEY(ucret_id)
 )type=MyISAM default charset=utf8;
 
-create table TARIH (
-	tarih_id int(10) not null auto_increment,
-	tarih_gun int(10) not null,
-	tarih_ay int(10) not null,
-	tarih_yil int(10) not null,
-	PRIMARY KEY(tarih_id)
-)type=MyISAM default charset=utf8;
-
 --
 -- tablolara girdi yap
 --
@@ -134,12 +131,15 @@ values
 	(3, 'opera'),
 	(4, 'bale');
 
-insert into ETKINLIK (etkinlik_id, etkinlik_ad, etkinlik_ilk, etkinlik_son, etkinlik_saat, etkinlik_durum, kategori_id)
+insert into ETKINLIK (etkinlik_id, etkinlik_ad, 
+		      etkinlik_ilk_gun, etkinlik_ilk_ay, etkinlik_ilk_yil,
+		      etkinlik_son_gun, etkinlik_son_ay, etkinlik_son_yil,
+		      etkinlik_saat, etkinlik_durum, kategori_id)
 values
-	(1, 'incredible hulk',    '12.10.2010', '24.10.2010', '18:00:00', 1, 1),
-	(2, 'ironman 2',          '13.10.2010', '25.10.2010', '19:00:00', 1, 1),
-	(3, '7 kocalı hürmüz',    '15.10.2010', '27.10.2010', '20:00:00', 1, 2),
-	(4, 'hacıvat ve karagöz', '16.10.2010', '28.10.2010', '21:00:00', 1, 2);
+	(1, 'incredible hulk',    12,10,2010, 24,10,2010, '18:00:00', 1, 1),
+	(2, 'ironman 2',          13,10,2010, 25,10,2010, '19:00:00', 1, 1),
+	(3, '7 kocalı hürmüz',    15,10,2010, 27,10,2010, '20:00:00', 1, 2),
+	(4, 'hacıvat ve karagöz', 16,10,2010, 28,10,2010, '21:00:00', 1, 2);
 
 insert into YER (yer_id, etkinlik_id, ililce_id, salon_id)
 values
@@ -199,30 +199,16 @@ values  -- A001 salonu koltukları
 	(25, 6, 'ba'),
 	(26, 6, 'bb');
 
-insert into REZERVE (rezerve_id, tarih_id, yer_id, koltuk_id, ucret_id, member_id)
+insert into REZERVE (rezerve_id, rezerve_gun, rezerve_ay, rezerve_yil, yer_id, koltuk_id, ucret_id, member_id)
 values
-	(1, 1,  1, 1,  1, 8060331),
-	(2, 1,  1, 2,  1, 8060331),
-	(3, 11, 1, 4,  2, 8060327),
-	(4, 3,  2, 7,  1, 8060333),
-	(5, 3,  3, 11, 1, 8060320),
-	(6, 8,  3, 12, 2, 8060321),
-	(7, 8,  7, 1,  2, 8060321),
-	(8, 9,  5, 23, 1, 8060331);
-
-insert into TARIH (tarih_id, tarih_gun, tarih_ay, tarih_yil)
-values
-	(1,  13, 10, 2010),
-	(2,  14, 10, 2010),
-	(3,  15, 10, 2010),
-	(4,  16, 10, 2010),
-	(5,  17, 10, 2010),
-	(6,  18, 10, 2010),
-	(7,  19, 10, 2010),
-	(8,  20, 10, 2010),
-	(9,  21, 10, 2010),
-	(10, 22, 10, 2010),
-	(11, 23, 10, 2010);
+	(1,  13,10,2010,  1, 1,  1, 8060331),
+	(2,  13,10,2010,  1, 2,  1, 8060331),
+	(3,  23,10,2010,  1, 4,  2, 8060327),
+	(4,  15,10,2010,  2, 7,  1, 8060333),
+	(5,  15,10,2010,  3, 11, 1, 8060320),
+	(6,  20,10,2010,  3, 12, 2, 8060321),
+	(7,  20,10,2010,  7, 1,  2, 8060321),
+	(8,  21,10,2010,  5, 23, 1, 8060331);
 
 insert into ILILCE (ililce_id, il, ilce) 
 values
@@ -248,7 +234,6 @@ values
 	(1, 'İndirimli-gün ücreti', 6),
 	(2, 'Öğrenci ücreti',       8),
 	(3, 'Tam ücreti',           10);
-
 
 --
 -- sorgu
@@ -293,7 +278,7 @@ where etkinlik_id in (
 
 -- il='adana' kategori='sinema' olan etkinliklerin
 -- adları, filmin giriş/bitiş tarihleri
-select etkinlik_ad, etkinlik_ilk, etkinlik_son, etkinlik_saat from ETKINLIK
+select etkinlik_ad, etkinlik_ilk_gun, etkinlik_ilk_ay, etkinlik_ilk_yil, etkinlik_son_gun, etkinlik_son_ay, etkinlik_son_yil, etkinlik_saat from ETKINLIK
 where etkinlik_id in (
 	select etkinlik_id from YER
 	where ililce_id in (
@@ -307,7 +292,7 @@ where etkinlik_id in (
 
 -- il='adiyaman' ilce='merkez' kategori='tiyatro' olan etkinliklerin
 -- adları, filmin giriş/bitiş tarihleri
-select etkinlik_ad, etkinlik_ilk, etkinlik_son, etkinlik_saat from ETKINLIK
+select etkinlik_ad, etkinlik_ilk_gun, etkinlik_ilk_ay, etkinlik_ilk_yil, etkinlik_son_gun, etkinlik_son_ay, etkinlik_son_yil, etkinlik_saat from ETKINLIK
 where etkinlik_id in (
 	select etkinlik_id from YER
 	where ililce_id in (
@@ -328,7 +313,7 @@ where koltuk_id in (
 
 -- member_id=8060331 olan kişinin rezerve ettiği etkinliklerin
 -- adları, filmin giriş/bitiş tarihleri
-select etkinlik_ad, etkinlik_ilk, etkinlik_son, etkinlik_saat from ETKINLIK
+select etkinlik_ad, etkinlik_ilk_gun, etkinlik_ilk_ay, etkinlik_ilk_yil, etkinlik_son_gun, etkinlik_son_ay, etkinlik_son_yil, etkinlik_saat from ETKINLIK
 where etkinlik_id in (
 	select etkinlik_id from REZERVE
 	where member_id = 8060331
