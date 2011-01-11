@@ -53,4 +53,7 @@ Açıklamalar
 
 	$ cd ~/
 	$ git clone git@github.com:gdemir/db-bilet-x.git
-	$ mysql -u root -p < ~/db-bilet-x/init.sql
+	$ cd db-bilet-x/
+	$ mysql -u root -p < 6_c.sql
+	$ mysql -u root bilet_x -p < insert.sql
+	$ mysql -u root bilet_x -p < 7.sql
