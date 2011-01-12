@@ -64,21 +64,6 @@ COLLATE = utf8_general_ci;
 
 
 -- -----------------------------------------------------
--- Table `bilet_x`.`SALON`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `bilet_x`.`SALON` ;
-
-CREATE  TABLE IF NOT EXISTS `bilet_x`.`SALON` (
-  `salon_id` INT NOT NULL AUTO_INCREMENT ,
-  `salon_ad` VARCHAR(60) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL ,
-  `salon_kapasite` INT NOT NULL ,
-  PRIMARY KEY (`salon_id`) )
-ENGINE = MyISAM
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
-
-
--- -----------------------------------------------------
 -- Table `bilet_x`.`YER`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `bilet_x`.`YER` ;
@@ -87,11 +72,9 @@ CREATE  TABLE IF NOT EXISTS `bilet_x`.`YER` (
   `yer_id` INT NOT NULL AUTO_INCREMENT ,
   `etkinlik_id` INT NOT NULL ,
   `ililce_id` INT NOT NULL ,
-  `salon_id` INT NOT NULL ,
   PRIMARY KEY (`yer_id`) ,
   INDEX `ililce_id` (`ililce_id` ASC) ,
   INDEX `etkinlik_id` (`etkinlik_id` ASC) ,
-  INDEX `salon_id` (`salon_id` ASC) ,
   CONSTRAINT `ililce_id`
     FOREIGN KEY (`ililce_id` )
     REFERENCES `bilet_x`.`ILILCE` (`ililce_id` )
@@ -101,10 +84,27 @@ CREATE  TABLE IF NOT EXISTS `bilet_x`.`YER` (
     FOREIGN KEY (`etkinlik_id` )
     REFERENCES `bilet_x`.`ETKINLIK` (`etkinlik_id` )
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `salon_id`
-    FOREIGN KEY (`salon_id` )
-    REFERENCES `bilet_x`.`SALON` (`salon_id` )
+    ON UPDATE NO ACTION)
+ENGINE = MyISAM
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
+
+-- -----------------------------------------------------
+-- Table `bilet_x`.`SALON`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `bilet_x`.`SALON` ;
+
+CREATE  TABLE IF NOT EXISTS `bilet_x`.`SALON` (
+  `salon_id` INT NOT NULL AUTO_INCREMENT ,
+  `salon_ad` VARCHAR(60) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL ,
+  `salon_kapasite` INT NOT NULL ,
+  `ililce_id` INT NOT NULL ,
+  PRIMARY KEY (`salon_id`) ,
+  INDEX `ililce_id` (`ililce_id` ASC) ,
+  CONSTRAINT `ililce_id`
+    FOREIGN KEY (`ililce_id` )
+    REFERENCES `bilet_x`.`ILILCE` (`ililce_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = MyISAM
@@ -122,8 +122,8 @@ CREATE  TABLE IF NOT EXISTS `bilet_x`.`KOLTUK` (
   `koltuk_ad` VARCHAR(60) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL ,
   `salon_id` INT NOT NULL ,
   PRIMARY KEY (`koltuk_id`) ,
-  INDEX `fk_KOLTUK_1` (`salon_id` ASC) ,
-  CONSTRAINT `fk_KOLTUK_1`
+  INDEX `salon_id` (`salon_id` ASC) ,
+  CONSTRAINT `salon_id`
     FOREIGN KEY (`salon_id` )
     REFERENCES `bilet_x`.`SALON` (`salon_id` )
     ON DELETE NO ACTION
@@ -184,18 +184,32 @@ CREATE  TABLE IF NOT EXISTS `bilet_x`.`REZERVE` (
   `rezerve_gun` INT NOT NULL ,
   `rezerve_ay` INT NOT NULL ,
   `rezerve_yil` INT NOT NULL ,
+  `etkinlik_id` INT NOT NULL ,
   `yer_id` INT NOT NULL ,
+  `salon_id` INT NOT NULL ,
   `koltuk_id` INT NOT NULL ,
   `ucret_id` INT NOT NULL ,
   `member_id` INT NOT NULL ,
   PRIMARY KEY (`rezerve_id`) ,
+  INDEX `etkinlik_id` (`etkinlik_id` ASC) ,
   INDEX `yer_id` (`yer_id` ASC) ,
+  INDEX `salon_id` (`salon_id` ASC) ,
   INDEX `koltuk_id` (`koltuk_id` ASC) ,
   INDEX `ucret_id` (`ucret_id` ASC) ,
   INDEX `member_id` (`member_id` ASC) ,
+  CONSTRAINT `etkinlik_id`
+    FOREIGN KEY (`etkinlik_id` )
+    REFERENCES `bilet_x`.`ETKINLIK` (`etkinlik_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `yer_id`
     FOREIGN KEY (`yer_id` )
     REFERENCES `bilet_x`.`YER` (`yer_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `salon_id`
+    FOREIGN KEY (`salon_id` )
+    REFERENCES `bilet_x`.`SALON` (`salon_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `koltuk_id`

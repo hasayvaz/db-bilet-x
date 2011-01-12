@@ -57,12 +57,12 @@ create table YER (
 	yer_id int(11) not null,
 	etkinlik_id int(10) not null,
 	ililce_id int(10) not null,
-	salon_id int(10) not null,
 	PRIMARY KEY(yer_id)
 )type=MyISAM default charset=utf8;
 
 create table SALON (
 	salon_id int(10) not null auto_increment,
+	ililce_id int(10) not null,
 	salon_ad varchar(60) not null,
 	salon_kapasite int(10) not null,
 	PRIMARY KEY(salon_id)
@@ -70,8 +70,8 @@ create table SALON (
 
 create table KOLTUK (
 	koltuk_id int(10) not null auto_increment,
-	koltuk_ad varchar(60) not null,
 	salon_id int(10) not null,
+	koltuk_ad varchar(60) not null,
 	PRIMARY KEY(koltuk_id)
 )type=MyISAM default charset=utf8;
 
@@ -80,7 +80,9 @@ create table REZERVE (
 	rezerve_gun int(10) not null,
 	rezerve_ay int(10) not null,
 	rezerve_yil int(10) not null,
+	etkinlik_id int(10) not null,
 	yer_id int(10) not null,
+	salon_id int(10) not null,
 	koltuk_id int(10) not null,
 	ucret_id int(10) not null,
 	member_id int(10) not null,
@@ -141,74 +143,67 @@ values
 	(3, '7 kocalı hürmüz',    15,10,2010, 27,10,2010, '20:00:00', 1, 2),
 	(4, 'hacıvat ve karagöz', 16,10,2010, 28,10,2010, '21:00:00', 1, 2);
 
-insert into YER (yer_id, etkinlik_id, ililce_id, salon_id)
+insert into YER (yer_id, etkinlik_id, ililce_id)
 values
-	(1,  1, 11, 1), -- adana merkez'in salonları A001/B001 oldugunu düşünüyoruz.	
-	(2,  1, 11, 2),	
-	(3,  1, 12, 3), -- adana kozan'in salonları A/B oldugunu düşünüyoruz.
-	(4,  1, 12, 4), 
-	(5,  1, 21, 5), -- adıyaman merkez'in salonları T-A/T-B oldugunu düşünüyoruz.
-	(6,  1, 21, 6),
-	(7,  2, 11, 1),
-	(8,  2, 11, 2),
-	(9,  3, 12, 3),
-	(10, 3, 12, 4),
-	(11, 4, 21, 5),
-	(12, 4, 21, 6),
-	(13, 4, 22, 5),
-	(14, 4, 22, 6);
+	(1, 1, 11), -- incredible hulk/adana-merkez
+	(2, 1, 12), -- incredible hulk/adana-kozan
+	(3, 1, 21), -- incredible hulk/adiyaman-merkez
+	(4, 2, 11), -- ironman 2/adana-merkez
+	(5, 3, 12), -- 7 kocalı hürmüz/adana-kozan
+	(6, 4, 21); -- hacıvat ve karagöz/adiyaman-merkez
 
-insert into SALON (salon_id, salon_ad, salon_kapasite)
+insert into SALON (salon_id, ililce_id, salon_ad, salon_kapasite)
 values
-	(1, 'A001', 4),
-	(2, 'B001', 4),
-	(3, 'A',    4),
-	(4, 'B',    4),
-	(5, 'T-A',  6),
-	(6, 'T-B',  6);
+	(1, 11, 'A001', 4), -- adana/merkez a001 salonu
+	(2, 11, 'B001', 4), -- adana/merkez b001 salonu
+	(3, 12, 'A',    6), -- adana/kozan A salonu
+	(4, 12, 'B',    6), -- adana/kozan B salonu
+	(5, 21, 'T-A',  2), -- adiyaman/merkez T-A salonu
+	(6, 21, 'T-B',  2); -- adiyaman/merkez T-B salonu
 
 insert into KOLTUK (koltuk_id, salon_id, koltuk_ad)
-values  -- A001 salonu koltukları
-	(1,  1, 'a1'),
-	(2,  1, 'a2'),
-	(3,  1, 'a3'),
-	(4,  1, 'a4'),
-	-- B001 salonu koltukları
-	(7,  2, 'b1'),
-	(8,  2, 'b2'),
-	(9,  2, 'b3'),
-	(10, 2, 'b4'),
-	-- A salonu koltukları
-	(11, 3, 'a-1'),
-	(12, 3, 'a-2'),
-	(13, 3, 'a-3'),
-	(14, 3, 'a-4'),
-	(15, 3, 'a-5'),
-	(16, 3, 'a-6'),
-	-- B salonu koltukları
-	(17, 4, 'b-1'),
-	(18, 4, 'b-2'),
-	(19, 4, 'b-3'),
-	(20, 4, 'b-4'),
-	(21, 4, 'b-5'),
-	(22, 4, 'b-6'),
-	-- T-A salonu
-	(23, 5, 'aa'),
-	(24, 5, 'ab'),
-	-- T-B salonu
-	(25, 6, 'ba'),
-	(26, 6, 'bb');
+values  
+	(1,  1, 'a1'),  -- adana/merkez a001/a1
+	(2,  1, 'a2'),  -- adana/merkez a001/a2
+	(3,  1, 'a3'),  -- adana merkez a001/a3 
+	(4,  1, 'a4'),  -- adana/merkez a001/a4
 
-insert into REZERVE (rezerve_id, rezerve_gun, rezerve_ay, rezerve_yil, yer_id, koltuk_id, ucret_id, member_id)
+	(7,  2, 'b1'),  -- adana/merkez b001/b1
+	(8,  2, 'b2'),  -- adana/merkez b001/b2
+	(9,  2, 'b3'),  -- adana/merkez b001/b3
+	(10, 2, 'b4'),  -- adana/merkez b001/b4
+	
+	(11, 3, 'a-1'), -- adana/kozan A/a-1
+	(12, 3, 'a-2'), -- adana/kozan A/a-2
+	(13, 3, 'a-3'), -- adana/kozan A/a-3
+	(14, 3, 'a-4'), -- adana/kozan A/a-4
+	(15, 3, 'a-5'), -- adana/kozan A/a-5
+	(16, 3, 'a-6'), -- adana/kozan A/a-6
+	
+	(17, 4, 'b-1'), -- adana/kozan B/b-6
+	(18, 4, 'b-2'), -- adana/kozan B/b-6
+	(19, 4, 'b-3'), -- adana/kozan B/b-6
+	(20, 4, 'b-4'), -- adana/kozan B/b-6
+	(21, 4, 'b-5'), -- adana/kozan B/b-6
+	(22, 4, 'b-6'), -- adana/kozan B/b-6
+	
+	(23, 5, 'aa'),  -- adiyaman/merkez T-A/aa
+	(24, 5, 'ab'),  -- adiyaman/merkez T-A/ab
+	
+	(25, 6, 'ba'),  -- adiyaman/merkez T-B/ba
+	(26, 6, 'bb');  -- adiyaman/merkez T-B/bb
+
+insert into REZERVE (rezerve_id, rezerve_gun, rezerve_ay, rezerve_yil, etkinlik_id, yer_id, salon_id, koltuk_id, ucret_id, member_id)
 values
-	(1,  13,10,2010,  1, 1,  1, 8060331),
-	(2,  13,10,2010,  1, 2,  1, 8060331),
-	(3,  23,10,2010,  1, 4,  2, 8060327),
-	(4,  15,10,2010,  2, 7,  1, 8060333),
-	(5,  15,10,2010,  3, 11, 1, 8060320),
-	(6,  20,10,2010,  3, 12, 2, 8060321),
-	(7,  20,10,2010,  7, 1,  2, 8060321),
-	(8,  21,10,2010,  5, 23, 1, 8060331);
+	(1,  13,10,2010, 1, 1, 1, 1,  1, 8060331),
+	(2,  13,10,2010, 1, 1, 1, 2,  1, 8060331),
+	(3,  13,10,2010, 1, 1, 2, 1,  1, 8060332),
+	(4,  23,10,2010, 1, 1, 1, 4,  2, 8060327),
+	(5,  15,10,2010, 1, 2, 2, 7,  1, 8060333),
+	(6,  15,10,2010, 1, 3, 3, 11, 1, 8060320),
+	(7,  20,10,2010, 2, 4, 1, 1,  2, 8060321),
+	(8,  20,10,2010, 4, 6, 2, 1,  2, 8060321),
+	(9,  21,10,2010, 3, 5, 5, 23, 1, 8060331);
 
 insert into ILILCE (ililce_id, il, ilce) 
 values
@@ -233,13 +228,13 @@ insert into UCRET (ucret_id, ucret_ad, ucret_fiyat)
 values
 	(1, 'İndirimli-gün ücreti', 6),
 	(2, 'Öğrenci ücreti',       8),
-	(3, 'Tam ücreti',           10);
+	(3, 'Tam ücreti',           15);
 
 --
 -- sorgu
 --
 -- user_id=8060331 olan kişinin rezerve sayısı 
-select count(*) from REZERVE
+select count(*) as 8060331_rezerve_sayisi from REZERVE
 where member_id = 8060331;
 
 -- il='adana' olan üyelerin bütün bilgileri 
@@ -304,12 +299,23 @@ where etkinlik_id in (
 	where kategori_ad = 'tiyatro'
 );
 
--- user_id=8060331 olan kişinin rezerve ettiği, koltuk adları
-select koltuk_ad as 8060331_rezerve_koltuk_adlari from KOLTUK
-where koltuk_id in (
-	select koltuk_id from REZERVE
+-- user_id=8060331 olan kişinin rezerve ettiği, il ilce kapasite bilgileri
+select s.salon_ad, s.salon_kapasite, i.il, i.ilce from SALON s, ILILCE i
+where s.ililce_id = i.ililce_id and salon_id in (
+	select salon_id from REZERVE
 	where member_id = 8060331
 );
+
+-- user_id=8060331 olan kişinin rezerve ettiği, il ilce ve etkinlikler
+select e.etkinlik_ad, i.il, i.ilce from YER y, ILILCE i, ETKINLIK e
+where y.ililce_id = i.ililce_id and y.etkinlik_id = e.etkinlik_id and yer_id in (
+	select yer_id from REZERVE
+	where member_id = 8060331
+);
+
+-- user_id=8060331 olan kişinin rezerve ettiği, il ilce ve etkinlikler
+select m.member_name, e.etkinlik_ad, s.salon_ad, k.koltuk_ad from REZERVE r, SALON s, KOLTUK k, ETKINLIK e, MEMBER m
+where s.salon_id = r.salon_id and k.koltuk_id = r.koltuk_id and e.etkinlik_id = r.etkinlik_id and m.member_id=r.member_id and r.member_id = 8060331;
 
 -- member_id=8060331 olan kişinin rezerve ettiği etkinliklerin
 -- adları, filmin giriş/bitiş tarihleri
@@ -319,8 +325,9 @@ where etkinlik_id in (
 	where member_id = 8060331
 );
 
+
 -- sinema'daki etkinlik adı='incredible hulk'
--- olan etkinliği rezerve edenlerin sayısı
+-- olan tüm illerde etkinliği rezerve edenlerin sayısı
 select count(*) as sinema_incredible_hulk_toplam_rezerve_sayisi from REZERVE
 where yer_id in (
 	select yer_id from YER
@@ -335,7 +342,7 @@ where yer_id in (
 
 -- sinema'da rezerve edenlerden kazandığımız para
 select sum(u.ucret_fiyat) as sinema_toplam_para from REZERVE r, UCRET u
-where r.ucret_id = u.ucret_id and r.yer_id in (
+where r.ucret_id = u.ucret_id and yer_id in (
 	select yer_id from YER
 	where etkinlik_id in (
 		select etkinlik_id from ETKINLIK
@@ -359,6 +366,7 @@ where r.ucret_id = u.ucret_id and r.yer_id in (
 		) and etkinlik_ad = 'ironman 2' 
 	)
 );
+
 
 -- sinema'daki etkinlik adı='incredible hulk'
 -- olan etkinliği rezerve edenlerden kazandığımız para
@@ -411,44 +419,51 @@ where r.ucret_id = u.ucret_id and r.yer_id in (
 -- il='adana' ilce='merkez'de kategori='sinema' etkinlik_adı='incredible hulk' olan filmin 
 -- salon='A001' de tarih=13.10.2010' da rezerve edilen koltukları göster
 -- olan etkinliği rezerve edenlerin sayısını göster
-select koltuk_ad as sinema_incredible_hulk_adana_merkez_A001_13_10_2010_rezerve_koltuk_adlari from KOLTUK
-where koltuk_id in (
+ select koltuk_ad as sinema_adana_merkez_a001_13_10_2010 from KOLTUK
+ where koltuk_id in (
 	select koltuk_id from REZERVE
-	where yer_id in (
-		select yer_id from YER
-		where etkinlik_id in (
-			select etkinlik_id from ETKINLIK
-			where kategori_id = (
-				select kategori_id from KATEGORI
-				where kategori_ad = 'sinema'
-			) and etkinlik_ad = 'incredible hulk' 
-		) and ililce_id in (
-			select ililce_id from ILILCE
-			where il = 'adana' and ilce = 'merkez'
-		) and salon_id in (
-			select salon_id from SALON
-			where salon_ad = 'A001'
-		)
-	) and rezerve_gun = 13 and rezerve_ay = 10 and rezerve_yil = 2010
-);
-
--- il='adana' ilce='merkez' kategori='sinema' etkinlik_ad='incredible hulk' 
--- olan etkinliklerin gerçekleşeceği salon_ad, salon_kapasiteleri
-select salon_ad, salon_kapasite from SALON
-where salon_id in (
-	select salon_id from YER
 	where etkinlik_id in (
 		select etkinlik_id from ETKINLIK
-		where kategori_id in (
+		where kategori_id = (
 			select kategori_id from KATEGORI
-			where kategori_ad='sinema'
-		) and etkinlik_ad = 'incredible hulk'
-	) and ililce_id in (
+			where kategori_ad = 'sinema'
+		) and etkinlik_ad = 'incredible hulk' 
+	) and yer_id in (
+		select yer_id from YER
+		where ililce_id in (
+			select ililce_id from ILILCE
+			where il = 'adana' and ilce = 'merkez'
+		)
+	) and salon_id in (
+		select salon_id from SALON
+		where salon_ad = 'A001'
+	) and rezerve_gun = 13 and rezerve_ay = 10 and rezerve_yil = 2010
+
+);
+
+-- il='adana' ilce='merkez'in tüm salon ve koltuk adlarını göster
+select s.salon_ad, k.koltuk_ad from SALON s, KOLTUK k
+where s.salon_id = k.salon_id and ililce_id in (
+	select ililce_id from ILILCE
+	where il = 'adana' and ilce = 'merkez'
+);
+
+
+/*
+-- il='adana' ilce='merkez' kategori='sinema' etkinlik_ad='incredible hulk' 
+-- olan etkinliklerin gerçekleşeceği salon_ad, salon_kapasiteleri
+-- select salon_ad, salon_kapasite from SALON
+-- where salon_id in (
+
+select koltuk_ad from KOLTUK
+where salon_id in (
+	select salon_id from SALON
+	where ililce_id in (
 		select ililce_id from ILILCE
 		where il = 'adana' and ilce = 'merkez'
 	)
 );
-
+/*
 -- il='adana' ilce='merkez' kategori='sinema' etkinlik_ad='incredible hulk' 
 -- olan etkinliklerin gerçekleşeceği salon_ad, salon_kapasiteleri ve koltuk adları
 select s.salon_kapasite, s.salon_ad, k.koltuk_ad from KOLTUK k, SALON s
