@@ -27,13 +27,9 @@ DROP TABLE IF EXISTS `bilet_x`.`ETKINLIK` ;
 CREATE  TABLE IF NOT EXISTS `bilet_x`.`ETKINLIK` (
   `etkinlik_id` INT NOT NULL AUTO_INCREMENT ,
   `etkinlik_ad` VARCHAR(128) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL ,
-  `etkinlik_ilk_gun` INT NOT NULL ,
-  `etkinlik_ilk_ay` INT NOT NULL ,
-  `etkinlik_ilk_yil` INT NOT NULL ,
-  `etkinlik_son_gun` INT NOT NULL ,
-  `etkinlik_son_ay` INT NOT NULL ,
-  `etkinlik_son_yil` INT NOT NULL ,
-  `etkinlik_saat` VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL ,
+  `etkinlik_ilk_tarih` DATE NOT NULL ,
+  `etkinlik_son_tarih` DATE NOT NULL ,
+  `etkinlik_saat` TIME NOT NULL ,
   `etkinlik_durum` INT NOT NULL ,
   `kategori_id` INT NOT NULL ,
   PRIMARY KEY (`etkinlik_id`) ,
@@ -162,6 +158,7 @@ CREATE  TABLE IF NOT EXISTS `bilet_x`.`MEMBER` (
   `member_username` VARCHAR(60) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL ,
   `member_password` VARCHAR(60) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL ,
   `member_telephone` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NOT NULL ,
+  `member_kredikart` INT NOT NULL ,
   PRIMARY KEY (`member_id`) ,
   INDEX `ililce_id` (`ililce_id` ASC) ,
   CONSTRAINT `ililce_id`
@@ -181,9 +178,7 @@ DROP TABLE IF EXISTS `bilet_x`.`REZERVE` ;
 
 CREATE  TABLE IF NOT EXISTS `bilet_x`.`REZERVE` (
   `rezerve_id` INT NOT NULL AUTO_INCREMENT ,
-  `rezerve_gun` INT NOT NULL ,
-  `rezerve_ay` INT NOT NULL ,
-  `rezerve_yil` INT NOT NULL ,
+  `rezerve_tarih` DATE NOT NULL ,
   `etkinlik_id` INT NOT NULL ,
   `yer_id` INT NOT NULL ,
   `salon_id` INT NOT NULL ,
