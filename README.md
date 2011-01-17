@@ -51,9 +51,29 @@ Açıklamalar
 
 ### uygulmayı denemek için
 
+indir :
+
 	$ cd ~/
 	$ git clone git@github.com:gdemir/db-bilet-x.git
 	$ cd db-bilet-x/
+
+db oluştur :  
+
 	$ mysql -u root -p < 6_c.sql
-	$ mysql -u root bilet_x -p < insert.sql
+
+girdi gir :
+	
+	$ # konsoldan yükle
+	$ mysql -u root bilet_x -p < insert/konsol/insert.sql # konsoldan yükle
+
+	# veya arayüzden yükle
+	# insert/phpmyadmin/ altındaki dosyaları herbir tabloya phpmyadminde "içeri aktar" şeklinde, "csv" olarak yükle
+
+sorgula :
+
+	# konsoldan sorgula
 	$ mysql -u root bilet_x -p < 7.sql
+	
+	# veya arayüzden sorgula
+	# mysql-workbenchde Database > query database bölümünden 7.sql içindeki her bir sorguyu sorgula.
+
